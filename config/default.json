@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://chigozie:chigozie@chigozie.4pepy.mongodb.net/devconnector?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://chigozie:chigozie@chigozie.4pepy.mongodb.net/devconnector?retryWrites=true&w=majority",
+  "jwtSecret": "smnkreiojrgerwesd"
 }
