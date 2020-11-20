@@ -1,0 +1,3 @@
+{
+  "mongoURI": "mongodb+srv://chigozie:chigozie@chigozie.4pepy.mongodb.net/devconnector?retryWrites=true&w=majority"
+}
