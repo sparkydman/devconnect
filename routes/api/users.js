@@ -27,6 +27,8 @@ router.post(
       });
     }
 
+    req.body.email = req.body.email.toLowerCase();
+
     const { name, email, password } = req.body;
 
     // check iif users exist

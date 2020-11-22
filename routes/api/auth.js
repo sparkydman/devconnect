@@ -27,8 +27,8 @@ router.get("/", auth, async (req, res) => {
 router.post(
   "/",
   [
-    check("email", "Incorrent login credentials").isEmail(),
-    check("password", "Incorrent login credentials").exists(),
+    check("email", "Incorrent login email credentials").isEmail(),
+    check("password", "Incorrent login password credentials").not().isEmpty(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -38,9 +38,11 @@ router.post(
       });
     }
 
-    const { email, password } = req.body;
+    req.body.email = req.body.email.toLowerCase();
 
+    const { email, password } = req.body;
     // check if users exist
+
     try {
       const user = await User.findOne({ email });
 
