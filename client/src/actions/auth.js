@@ -6,6 +6,7 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
+  CLEAR_PROFILE,
 } from "./types";
 import axios from "axios";
 import { setAlert } from "../actions/alert";
@@ -29,7 +30,7 @@ export const loadUser = () => async (dispatch) => {
   }
 };
 
-export const register = ({ name, email, password }) => async (dispatch) => {
+export const register = (name, email, password) => async (dispatch) => {
   const config = {
     headers: { "Content-Type": "application/json" },
   };
@@ -78,7 +79,9 @@ export const login = (email, password) => async (dispatch) => {
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+      errors
+        .slice(0, 1)
+        .forEach((error) => dispatch(setAlert(error.msg, "danger")));
     }
     dispatch({
       type: LOGIN_FAIL,
@@ -89,4 +92,5 @@ export const login = (email, password) => async (dispatch) => {
 // logout/clear profile
 export const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT });
+  dispatch({ type: CLEAR_PROFILE });
 };

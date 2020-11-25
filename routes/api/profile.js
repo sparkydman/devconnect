@@ -5,7 +5,9 @@ const { check, validationResult } = require("express-validator");
 const auth = require("../../middleware/auth");
 const Profile = require("../../model/Profile");
 const User = require("../../model/User");
+// const Post = require("../../model/Post");
 const request = require("request");
+const { json } = require("express");
 
 // @route GET api/profile/me
 // @desc Get current user's profile
@@ -37,6 +39,7 @@ router.post(
     [
       check("status", "Status is required").not().isEmpty(),
       check("skills", "Skills is required").not().isEmpty(),
+      check("location", "Location is required").not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -52,7 +55,7 @@ router.post(
       status,
       bio,
       skills,
-      githusername,
+      githubusername,
       youtube,
       twitter,
       facebook,
@@ -67,7 +70,7 @@ router.post(
     if (location) profileField.location = location;
     if (status) profileField.status = status;
     if (bio) profileField.bio = bio;
-    if (githusername) profileField.githusername = githusername;
+    if (githubusername) profileField.githubusername = githubusername;
 
     // format skills to arrays
     if (skills)
@@ -124,7 +127,7 @@ router.get("/user/:user_id", async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id,
-    }).populate("user", ["name", "avatar"]);
+    }).populate("user", ["_id", "name", "avatar"]);
     if (!profile) return res.status(400).json({ msg: "Profile not found" });
     res.json(profile);
   } catch (err) {
@@ -141,6 +144,8 @@ router.get("/user/:user_id", async (req, res) => {
 // @access private
 router.delete("/", auth, async (req, res) => {
   try {
+    // delete all user posts
+    // await Post.deleteMany({ user: req.user.id });
     //   delete profile
     await Profile.findOneAndDelete({ user: req.user.id });
     //   delete user
@@ -317,7 +322,7 @@ router.get("/github/:username", (req, res) => {
       if (response.statusCode !== 200) {
         return res.status(500).json({ msg: "Github user not found" });
       }
-      res.json(body);
+      res.json(JSON.parse(body));
     });
   } catch (err) {
     console.error(err);
