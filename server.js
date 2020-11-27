@@ -1,5 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const hpp = require("hpp");
 
 const connectDB = require("./config/db");
 
@@ -8,6 +12,18 @@ const app = express();
 app.use(cors("*"));
 
 app.use(express.json({ extended: false }));
+
+// Sanitize data
+app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
+
+// Prevent XSS attacks
+app.use(xss());
+
+// Prevent http param pollution
+app.use(hpp());
 
 // Connecting Database
 connectDB();
