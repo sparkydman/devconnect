@@ -28,7 +28,7 @@ const Dashboard = ({
           <p className="lead">
             <i className="fas fa-user"></i> Welcome {user && user.name}
           </p>
-          {profile !== null ? (
+          {profile !== null && !profile.loading ? (
             <>
               <DashboardActions />
 

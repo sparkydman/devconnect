@@ -24,7 +24,7 @@ export const getCurrentProfile = () => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: "Network error",
     });
   }
 };
@@ -44,7 +44,7 @@ export const getProfiles = () => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: "Network error",
     });
   }
 };
@@ -61,7 +61,7 @@ export const getProfileById = (userId) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: "Network error",
     });
   }
 };
@@ -78,7 +78,7 @@ export const getRepos = (username) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err, status: err },
+      payload: "Network error",
     });
   }
 };
@@ -110,7 +110,7 @@ export const createProfile = (formData, history, edit = false) => async (
     }
     dispatch({
       type: CREATE_PROFILE_FAIL,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: "Network error",
     });
   }
 };
@@ -140,7 +140,7 @@ export const addExperience = (formData, history) => async (dispatch) => {
     }
     dispatch({
       type: CREATE_PROFILE_FAIL,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: "Network error",
     });
   }
 };
@@ -170,7 +170,7 @@ export const addEducation = (formData, history) => async (dispatch) => {
     }
     dispatch({
       type: CREATE_PROFILE_FAIL,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: "Network error",
     });
   }
 };
@@ -188,7 +188,7 @@ export const deleteExperience = (exp_id) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: CREATE_PROFILE_FAIL,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: "Network error",
     });
   }
 };
@@ -206,7 +206,7 @@ export const deleteEducation = (id) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: CREATE_PROFILE_FAIL,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: "Network error",
     });
   }
 };
@@ -223,7 +223,7 @@ export const deleteAccount = () => async (dispatch) => {
     } catch (err) {
       dispatch({
         type: CREATE_PROFILE_FAIL,
-        payload: { msg: err.response.statusText, status: err.response.status },
+        payload: "Network error",
       });
     }
   }

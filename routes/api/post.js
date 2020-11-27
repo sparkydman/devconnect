@@ -12,6 +12,10 @@ router.post(
   "/",
   [auth, [check("text", "Text is required").not().isEmpty()]],
   async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     try {
       const { text } = req.body;
 
@@ -155,13 +159,24 @@ router.put("/like/:post_id", auth, async (req, res) => {
       return res.status(404).json({ msg: "Post not found" });
     }
 
-    const allLikedUsers = post.likes.map((like) => like._id.toString());
-
-    if (!allLikedUsers.includes(req.user.id)) {
-      await post.likes.unshift(req.user.id);
-    } else {
-      await post.likes.pull(req.user.id);
+    if (
+      post.likes.filter((like) => like.user.toString() === req.user.id).length >
+      0
+    ) {
+      return res.status(400).json({ msg: "Post already been liked" });
     }
+    if (
+      post.unlikes.filter((unlike) => unlike.user.toString() === req.user.id)
+        .length > 0
+    ) {
+      const unlikeIndex = post.unlikes
+        .map((unlikes) => unlikes.user.toString())
+        .indexOf(req.user.id);
+
+      post.unlikes.splice(unlikeIndex, 1);
+    }
+
+    post.likes.unshift({ user: req.user.id });
 
     await post.save();
 
@@ -185,17 +200,29 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
       return res.status(404).json({ msg: "Post not found" });
     }
 
-    const allLikedUsers = post.likes.map((like) => like._id.toString());
-
-    if (allLikedUsers.includes(req.user.id)) {
-      await post.likes.pull(req.user.id);
-    } else {
-      await post.likes.unshift(req.user.id);
+    if (
+      post.unlikes.filter((unlike) => unlike.user.toString() === req.user.id)
+        .length > 0
+    ) {
+      return res.status(400).json({ msg: "Post has already been unliked" });
     }
+
+    if (
+      post.likes.filter((like) => like.user.toString() === req.user.id).length >
+      0
+    ) {
+      const likedIndex = post.likes
+        .map((like) => like.user.toString())
+        .indexOf(req.user.id);
+
+      post.likes.splice(likedIndex, 1);
+    }
+
+    post.unlikes.unshift({ user: req.user.id });
 
     await post.save();
 
-    res.json(post.likes);
+    res.json(post.unlikes);
   } catch (err) {
     console.error(err);
     if (err.kind === "ObjectId") {
@@ -208,34 +235,42 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
 // @route PUT api/post/comment/:post_id
 // @desc add a post
 // @access Private
-router.put("/comment/:post_id", auth, async (req, res) => {
-  try {
-    let post = await Post.findOne({ _id: req.params.post_id });
-    const user = await User.findOne({ _id: req.user.id });
-    if (!post) {
-      return res.status(404).json({ msg: "Post not found" });
+router.post(
+  "/comment/:post_id",
+  [auth, check("text", "Text is required").not().isEmpty()],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
+    try {
+      let post = await Post.findOne({ _id: req.params.post_id });
+      const user = await User.findOne({ _id: req.user.id });
+      if (!post) {
+        return res.status(404).json({ msg: "Post not found" });
+      }
 
-    const newComment = {
-      text: req.body.text,
-      user: req.user.id,
-      name: user.name,
-      avatar: user.avatar,
-    };
+      const newComment = {
+        text: req.body.text,
+        user: req.user.id,
+        name: user.name,
+        avatar: user.avatar,
+      };
 
-    await post.comments.unshift(newComment);
+      await post.comments.unshift(newComment);
 
-    await post.save();
+      await post.save();
 
-    res.json(post.comments);
-  } catch (err) {
-    console.error(err);
-    if (err.kind === "ObjectId") {
-      return res.status(404).json({ msg: "Post not found" });
+      res.json(post.comments);
+    } catch (err) {
+      console.error(err);
+      if (err.kind === "ObjectId") {
+        return res.status(404).json({ msg: "Post not found" });
+      }
+      res.status(500).send("Server Error");
     }
-    res.status(500).send("Server Error");
   }
-});
+);
 
 // @route DELETE api/comment/:post_id/:commen_id
 // @desc Delete comment
