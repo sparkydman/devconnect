@@ -1,6 +1,0 @@
-{
-  "mongoURI": ${{secrets.MONGOURI}},
-  "jwtSecret": ${{secrets.JWT_SECRET}},
-  "githubClientId": ${{secrets.GITHUBCLIENTID}},
-  "githubSecret": ${{secrets.GITHUBSECRET}}
-}
