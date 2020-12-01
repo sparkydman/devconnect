@@ -5,6 +5,9 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const path = require("path");
+const dotenv = require("dotenv");
+
+dotenv.config({ path: "./config/config.env" });
 
 const connectDB = require("./config/db");
 

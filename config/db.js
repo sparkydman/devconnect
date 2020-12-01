@@ -1,10 +1,8 @@
 const monogoose = require("mongoose");
-const config = require("config");
-const db = config.get("mongoURI");
 
 const connectDB = async () => {
   try {
-    await monogoose.connect(db, {
+    await monogoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useFindAndModify: false,
       useUnifiedTopology: true,

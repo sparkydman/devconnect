@@ -1,6 +1,0 @@
-{
-  "mongoURI": "mongodb+srv://chigozie:chigozie@chigozie.4pepy.mongodb.net/devconnector?retryWrites=true&w=majority",
-  "jwtSecret": "smnkreiojrgerwesd",
-  "githubClientId": "ad5607faec0b3b437e17",
-  "githubSecret": "d5af6f7967637000fd7d5da7e3b7eddcba1a9e5d"
-}
